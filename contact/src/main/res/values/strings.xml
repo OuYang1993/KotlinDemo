@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">contact</string>
+    <string name="help">提示</string>
+    <string name="string_help_text">缺少权限</string>
+    <string name="quit">取消</string>
+    <string name="settings">设置</string>
+    <string name="test" >哈哈哈哈哈\n哈哈哈哈\n哈哈哈哈</string>
+</resources>

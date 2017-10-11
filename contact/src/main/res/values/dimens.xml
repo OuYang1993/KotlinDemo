@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="rv_divider_height">1dp</dimen>
+    <dimen name="rv_divider_paddingLeft">16dp</dimen>
+    <dimen name="rv_divider_paddingRight">16dp</dimen>
+</resources>
