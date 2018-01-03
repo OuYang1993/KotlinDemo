@@ -4,5 +4,7 @@
     <string name="string_help_text">缺少权限</string>
     <string name="quit">取消</string>
     <string name="settings">设置</string>
-    <string name="test" >哈哈哈哈哈\n哈哈哈哈\n哈哈哈哈</string>
+    <string name="short_label">查看联系人</string>
+    <string name="long_label">查看联系人长标签</string>
+
 </resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_account_circle_black_24dp"
+        android:shortcutId="sc_contact"
+        android:shortcutLongLabel="@string/short_label"
+        android:shortcutShortLabel="@string/long_label">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="ouyang.com.contact.activity.MainActivity"
+            android:targetPackage="ouyang.com.contact" />
+        <categoried android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>

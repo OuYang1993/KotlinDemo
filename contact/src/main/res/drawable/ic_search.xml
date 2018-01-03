@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportHeight="108.0"
+    android:viewportWidth="108.0">
+
+    <path
+        android:fillColor="@color/material_teal_500"
+        android:pathData="h108v108 h-108z" />
+    <path
+        android:fillColor="@color/transparent"
+        android:pathData="M9,0L9,108 M18,0L18,108 M27,0L27,108 M36,0L36,108 M45,0L45,108 M63,0L63,108 M72,0L72,108 M81,0L81,108 M90,0L90,108 M99,0L99,108"
+        android:strokeColor="#33ffffff"
+        android:strokeWidth="0.5" />
+    <path
+        android:fillColor="@color/transparent"
+        android:pathData="M0,9L108,9 M0,18L108,18 M0,27L108,27 M0,36L108,36 M0,45L108,45 M0,63L108,63 M0,72L108,72 M0,81L108,81 M0,90L108,90 M0,99L108,99"
+        android:strokeColor="#33ffffff"
+        android:strokeWidth="0.5" />
+    <path
+        android:fillColor="@color/transparent"
+        android:pathData="M54,0L54,108 M0,54L108,54"
+        android:strokeColor="@color/red"
+        android:strokeWidth="0.5" />
+
+    <!--利用弧线指令画圆-->
+    <path
+        android:pathData="M54,78 a24,24 0 1,1 0.01,0"
+        android:strokeColor="@color/white"
+        android:strokeWidth="0.5" />
+
+    <path
+        android:pathData="M54,48
+            a5,6 -15 0 0 -9,2
+            c0,5 4,6 9,12
+            c5,-6 9,-7 9,-12
+            a5,6 15 0 0 -9 -2"
+        android:strokeColor="@color/white"
+        android:strokeWidth="0.5" />
+
+
+</vector>

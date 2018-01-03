@@ -1,1 +1,1 @@
-include ':contact'
+include ':contact', ':serialtest', ':display'

@@ -12,10 +12,10 @@ import ouyang.com.contact.bean.Contact
 
 class ContactUtil {
     companion object { //companion相当于java的static,只有在这里面的方法才能以静态方法的方式调用
-        fun getContacts(context: Context): List<Contact> {
+        fun getContacts(context: Context): MutableList<Contact> {
             val list = ArrayList<Contact>(0)
             val cr = context.contentResolver
-            val cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
+            val cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.SORT_KEY_PRIMARY)
             if (cursor != null) {
                 while (cursor.moveToNext()) {
                     val _id = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts._ID))
@@ -26,9 +26,14 @@ class ContactUtil {
                             ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + _id, null, null)
                     var numbers = ArrayList<String>()
                     while (phoneCursor.moveToNext()) {
-                        val phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                        var phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
 //                        Log.e("ContactUtil", "phoneNumber: " + phoneNumber)
                         if (!TextUtils.isEmpty(phoneNumber)) {
+                            phoneNumber = phoneNumber.replace(" ", "", true)
+                            val length = phoneNumber.length
+                            if (length > 11 && phoneNumber.startsWith("+")) {//长度大于11的 表示前面带有+86之类的,为了避免电话号码也被裁剪,以+开头的才算
+                                phoneNumber = phoneNumber.substring(length - 11)//手机号码固定为11位,所以需要截取后面的11位
+                            }
                             numbers.add(phoneNumber)
                         }
                     }
@@ -38,8 +43,8 @@ class ContactUtil {
                     list.add(contact)
 
                 }
+                cursor.close()
             }
-            cursor.close()
             return list
         }
     }
