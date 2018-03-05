@@ -5,13 +5,23 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.BaseInputConnection;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import ouyang.com.serialtest.databinding.ActivityMainBinding;
 import ouyang.com.serialtest.serial.SerialPortManager;
@@ -20,6 +30,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ActivityMainBinding binding;
     private String TAG = getClass().getSimpleName();
     private SerialPortManager manager;
+    private ThreadPoolExecutor executor;
+    private final int CORE_POOL_SIZE = 10;
+    private final int MAX_POOL_SIZE = 20;
+    private final long ALIVE_TIME = 15;//空闲线程存活时间
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String CPU_ABI = android.os.Build.CPU_ABI;
         Log.e(TAG, "设备ABI: " + CPU_ABI);
         setListener();
+        executor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAX_POOL_SIZE, ALIVE_TIME, TimeUnit.SECONDS,
+                new LinkedBlockingDeque<Runnable>(10), new ThreadPoolExecutor.CallerRunsPolicy());
 //        manager = new SerialPortManager();
 //        boolean success = manager.openSerialPort("/dev/ttyS0", 9600);
 
@@ -64,11 +80,93 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void test() {
 //        initRecommendPrices(0);
-        SerialPortManager manager = new SerialPortManager();
-        boolean serialPort = manager.openSerialPort("/dev/ttyS1", 9600);
-        System.out.println("打开串口: " + serialPort);
-        manager.closeSerialPort();
-        System.out.println("关闭串口: ");
+//        SerialPortManager manager = new SerialPortManager();
+//        boolean serialPort = manager.openSerialPort("/dev/ttyS1", 9600);
+//        System.out.println("打开串口: " + serialPort);
+//        manager.closeSerialPort();
+//        System.out.println("关闭串口: ");
+//"/system/bin/"
+//        String command = "input keyevent 4";
+//        File file = new File("/system/bin/su");
+//        chmod777(file);
+//        getEtherGateWay(command);
+
+        BaseInputConnection connection = new BaseInputConnection(binding.layoutContent, true);
+        KeyEvent kv = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_POWER);
+        KeyEvent ku = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_POWER);
+        connection.sendKeyEvent(kv);
+        connection.sendKeyEvent(ku);
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Instrumentation inst = new Instrumentation();
+//                inst.sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_UP);
+//
+//            }
+//        }).start();
+
+    }
+
+    /**
+     * 文件设置最高权限 777 可读 可写 可执行
+     *
+     * @param file 文件
+     * @return 权限修改是否成功
+     */
+    boolean chmod777(File file) {
+        if (null == file || !file.exists()) {
+            // 文件不存在
+            return false;
+        }
+        try {
+            // 获取ROOT权限
+            Process su = Runtime.getRuntime().exec("/system/bin/su");
+            // 修改文件属性为 [可读 可写 可执行]
+            String cmd = "chmod 777 " + file.getAbsolutePath() + "\n" + "exit\n";
+            su.getOutputStream().write(cmd.getBytes());
+            if (0 == su.waitFor() && file.canRead() && file.canWrite() && file.canExecute()) {
+                return true;
+            }
+        } catch (IOException | InterruptedException e) {
+            // 没有ROOT权限
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 获取以太网网关,子线程获取,通过handler回调结果
+     */
+    private void getEtherGateWay(final String command) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                String result = "";
+                try {
+                    Runtime runtime = Runtime.getRuntime();
+//            Process process = runtime.exec("/system/bin/ping -c 4 -w 5 " + ipAddress);
+                    Process process = runtime.exec(command, null, null);
+
+                    InputStream inputStream = process.getInputStream();
+                    StringBuilder sb = new StringBuilder();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                    reader.close();
+                    inputStream.close();
+
+                    result = sb.toString();
+                    Log.e(TAG, "获取结果: " + result);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
 
