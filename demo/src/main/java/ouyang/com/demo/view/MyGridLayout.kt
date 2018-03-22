@@ -51,7 +51,7 @@ class MyGridLayout : android.support.v7.widget.GridLayout {
 
 
         val childCount = childCount
-        var maxChildSize = 0
+        var maxChildSize :Int
         if (measuredHeight > measuredWidth) {
             //高比宽大
             maxChildSize = measuredWidth / Integer.parseInt(columnCount)

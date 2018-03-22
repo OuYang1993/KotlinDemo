@@ -5,7 +5,6 @@ import android.graphics.Point
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import kotlinx.android.synthetic.main.activity_main.*
 import om.demo.display.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -46,6 +45,6 @@ class MainActivity : AppCompatActivity() {
                 .append("density: ").append(density).append("\n")
                 .append("scaledDensity: ").append(scaledDensity).append("\n")
 
-        tv_msg.text = builder.toString()
+        binding.tvMsg.text = builder.toString()
     }
 }
